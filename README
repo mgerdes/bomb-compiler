@@ -1,0 +1,2 @@
+A bomb compiler that targets the 8086 assembly language.
+Mostly here to learn about compilers / parsers /lexers /code generation.
