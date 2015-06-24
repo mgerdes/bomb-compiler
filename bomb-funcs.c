@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "bomb-funcs.h"
 
 void gen_code_for_if_statement(struct if_statement_node *if_statement, int if_statement_number) {
@@ -107,18 +108,20 @@ void gen_code_for_list_of_statements(struct list_of_statements * list) {
     }
 }
 
-int used_println_func = 0;
-
 void gen_code_for_function_call(struct function_call_node * function_call) {
-    if (!used_println_func && !strcmp(function_call->symbol->name, "println")) {
-        used_println_func = 1;
-    }
     struct list_of_parameters * parameters = function_call->parameters;
-    while(parameters) {
+    int total_offset = 0;
+    while (parameters) {
         gen_code(parameters->expression);
+        MOV("BX", "Parameters");
+        ADD("BX", "Parameter_Offset");
+        MOV("[BX]", "AX");
+        ADD("Parameter_Offset", "2");
+        total_offset += 2;
         parameters = parameters->rest_of_parameters;
     }
     CALL(function_call->symbol->name);
+    SUB_NUM("Parameter_Offset", total_offset); 
 }
 
 void gen_code(struct ast *ast) {
@@ -270,6 +273,7 @@ void init() {
     printf("\t.DATA\n"); 
     printf("GlobalVariables DW 500 DUP (?)\n");
     printf("Parameters DW 500 DUP (?)\n");
+    printf("Parameter_Offset DW ?\n");
     printf("\t.CODE\n"); 
     printf("\tEXTERN\tPutDec : Near\n"); 
     printf("main PROC\n"); 
@@ -278,14 +282,10 @@ void init() {
 }
 
 void finish() {
+    CALL("PutDec");
     MOV("AL", "0");
     MOV("AH", "4CH");
     INT("21H");
     printf("main ENDP\n");
-    if (used_println_func) {
-        printf("println PROC\n");
-        CALL("PutDec");
-        printf("println ENDP\n");
-    }
     printf("\tEND main\n");
 }

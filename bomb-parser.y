@@ -60,6 +60,7 @@
 program
     : statements
         { gen_code($1); }
+      function_definitions
     ;
 
 statements
@@ -131,7 +132,11 @@ list_parameters
         { $$ = new_list_of_parameters($1, $3); }
     ;
 
-/*
+function_definitions
+    :
+    | function_definitions function_definition
+    ;
+
 function_definition
     : DEF SYMBOL OPEN_PAREN list_definition_parameters CLOSE_PAREN statement END
     ;
@@ -141,4 +146,3 @@ list_definition_parameters
     | SYMBOL 
     | SYMBOL COMMA list_definition_parameters 
     ;
-*/

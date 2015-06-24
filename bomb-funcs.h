@@ -9,6 +9,7 @@
 #define LABEL(label, label_num) printf("%s_%d:\n", label, label_num);
 #define ADD(op1, op2) printf("\tADD\t%s, %s\n", op1, op2);
 #define SUB(op1, op2) printf("\tSUB\t%s, %s\n", op1, op2);
+#define SUB_NUM(op1, op2) printf("\tSUB\t%s, %d\n", op1, op2);
 #define MOV(op1, op2) printf("\tMOV\t%s, %s\n", op1, op2);
 #define MOV_NUM(op1, num) printf("\tMOV\t%s, %d\n", op1, num);
 #define CMP(op1, op2) printf("\tCMP\t%s, %s\n", op1, op2);
