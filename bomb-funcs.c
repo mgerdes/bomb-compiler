@@ -126,10 +126,11 @@ void gen_code_for_function_call(struct function_call_node * function_call) {
 
 void gen_code_for_functions(struct list_of_function_definitions * functions) {
     while (functions) {
-        printf("NAME PROC\n");
+        BEGIN_PROC(functions->function->symbol->name);        
         gen_code((struct ast *) functions->function->statements);
+        RET();
+        END_PROC(functions->function->symbol->name);        
         functions = functions->rest_of_functions;
-        printf("NAME ENDP\n");
     }
 }
 

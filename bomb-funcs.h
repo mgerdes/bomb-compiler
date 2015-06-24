@@ -1,3 +1,4 @@
+#define RET() printf("\tRET\n"); 
 #define LAHF() printf("\tLAHF\n"); 
 #define CBW() printf("\tCBW\n"); 
 #define PUSH(op) printf("\tPUSH\t%s\n", op);
@@ -16,6 +17,8 @@
 #define SHR(op1, op2) printf("\tSHR\t%s, %s\n", op1, op2);
 #define OR(op1, op2) printf("\tOR\t%s, %s\n", op1, op2);
 #define AND(op1, op2) printf("\tAND\t%s, %s\n", op1, op2);
+#define BEGIN_PROC(op) printf("%s PROC\n", op);
+#define END_PROC(op) printf("%s ENDP\n", op);
 
 struct ast {
     int type;
