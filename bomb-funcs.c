@@ -124,6 +124,15 @@ void gen_code_for_function_call(struct function_call_node * function_call) {
     SUB_NUM("Parameter_Offset", total_offset); 
 }
 
+void gen_code_for_functions(struct list_of_function_definitions * functions) {
+    while (functions) {
+        printf("NAME PROC\n");
+        gen_code((struct ast *) functions->function->statements);
+        functions = functions->rest_of_functions;
+        printf("NAME ENDP\n");
+    }
+}
+
 void gen_code(struct ast *ast) {
     if (!ast) return;
     static int number_of_if_statements;
@@ -227,11 +236,28 @@ struct ast * new_function_call_node(struct symbol * symbol, struct list_of_param
     return (struct ast *) new_function_call;
 }
 
+struct list_of_function_definitions * new_function_definitions_list(struct function * function, struct list_of_function_definitions * rest_of_functions) {
+    struct list_of_function_definitions * new_list = (struct list_of_function_definitions *) malloc(sizeof(struct list_of_function_definitions));
+    new_list->function = function;
+    new_list->rest_of_functions = rest_of_functions;
+    return new_list;
+}
+
 struct list_of_parameters * new_list_of_parameters(struct ast * expression, struct list_of_parameters * list) {
     struct list_of_parameters * new_list = (struct list_of_parameters *) malloc(sizeof(struct list_of_parameters));
     new_list->expression = expression;
     new_list->rest_of_parameters = list;
     return new_list;
+}
+
+struct function * new_function(struct symbol * symbol, struct list_of_parameter_symbols * parameters, struct list_of_statements * statements) {
+    static int number_of_functions = 0;
+    struct function * new_function = (struct function *) malloc(sizeof(struct function));
+    new_function->number = number_of_functions++;
+    new_function->symbol = symbol;
+    new_function->parameters = parameters;
+    new_function->statements = statements;
+    return new_function;
 }
 
 int current_offset = 0;
@@ -281,11 +307,13 @@ void init() {
     MOV("DS", "AX");
 }
 
-void finish() {
-    CALL("PutDec");
+void end_main_proc() {
     MOV("AL", "0");
     MOV("AH", "4CH");
     INT("21H");
     printf("main ENDP\n");
+}
+
+void end_program() {
     printf("\tEND main\n");
 }

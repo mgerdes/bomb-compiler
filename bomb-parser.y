@@ -10,7 +10,10 @@
     struct ast *ast;
     int integer;
     struct symbol *symbol;
-    struct symlist *symbol_list;
+
+    struct function *function;
+    struct list_of_parameter_symbols *list_parameters;
+    struct list_of_function_definitions *functions;
 }
 
 %token IF
@@ -53,14 +56,25 @@
 %left GREATER_THEN_EQUAL LESS_THEN_EQUAL EQUAL_EQUAL GREATER_THEN LESS_THEN 
 
 %type <integer> NUMBER
-%type <ast> program statements statement if_statement expression arithmetic_expression boolean_expression assignment SYMBOL while_loop function_call list_parameters
+%type <ast> program statements statement if_statement expression arithmetic_expression boolean_expression assignment SYMBOL while_loop function_call list_parameters 
+%type <function> function_definition
+%type <list_parameters> list_definition_parameters
+%type <functions> function_definitions
 
 %%
 
 program
     : statements
-        { gen_code($1); }
+        { 
+            init();
+            gen_code($1); 
+            end_main_proc();
+        }
       function_definitions
+        {
+            gen_code_for_functions($3); 
+            end_program();
+        }
     ;
 
 statements
@@ -133,16 +147,22 @@ list_parameters
     ;
 
 function_definitions
-    :
-    | function_definitions function_definition
+    : function_definition
+        { $$ = new_function_definitions_list($1, NULL); }
+    | function_definition function_definitions
+        { $$ = new_function_definitions_list($1, $2); }
     ;
 
 function_definition
     : DEF SYMBOL OPEN_PAREN list_definition_parameters CLOSE_PAREN statement END
+        { $$ = new_function($2, $4, $6); }
     ;
 
 list_definition_parameters
     : 
+        { $$ = NULL; }
     | SYMBOL 
+        { $$ = NULL; }
     | SYMBOL COMMA list_definition_parameters 
+        { $$ = NULL; }
     ;

@@ -1,10 +1,15 @@
-prev1 = 0
-prev2 = 1
-i = 0
+i = 10
 
-while i < 10
-    prev2 = prev1 + prev2
-    prev1 = prev2
-
-    i = i + 1
+while i 
+    print(i, 2) 
+    i = i - 1
 end
+
+def inc(n)
+    n + 1
+end
+
+def dec(n)
+    n - 1
+end
+

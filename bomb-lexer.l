@@ -44,7 +44,8 @@ whitespace [\n\t ]*
 {number} { 
     yylval.integer = atoi(yytext);
     return NUMBER; 
- }
+}
+
 {symbol} { 
     yylval.symbol = find_symbol(yytext);
     return SYMBOL; 
@@ -55,9 +56,7 @@ whitespace [\n\t ]*
 %%
 
 int main() {
-    init();
     yyparse();
-    finish();
 }
 
 int yyerror(char *error) {

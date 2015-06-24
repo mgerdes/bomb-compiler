@@ -82,6 +82,23 @@ struct function_call_node {
     struct list_of_parameters * parameters;
 };
 
+struct function {
+    int number;
+    struct symbol * symbol;
+    struct list_of_parameter_symbols * parameters;
+    struct list_of_statements * statements;
+};
+
+struct list_of_function_definitions {
+    struct function * function;
+    struct list_of_function_definitions * rest_of_functions;
+};
+
+struct list_of_parameter_symbols {
+    struct symbol * symbol;
+    struct list_of_parameter_symbols * rest_of_symbols;
+};
+
 #define SYMBOL_TABLE_SIZE 1000
 struct symbol symbol_table[SYMBOL_TABLE_SIZE];
 
@@ -95,5 +112,7 @@ struct ast * new_assignment_node(struct symbol *, struct ast *);
 struct ast * new_while_node(struct ast *, struct ast *);
 struct ast * new_list_of_statements_node(struct ast *, struct ast *);
 struct ast * new_function_call_node(struct symbol *, struct list_of_parameters *);
+struct list_of_function_definitions * new_function_definitions_list(struct function *, struct list_of_function_definitions *);
 struct list_of_parameters * new_list_of_parameters(struct ast *, struct list_of_parameters *);
+struct function * new_function(struct symbol *, struct list_of_parameter_symbols *, struct list_of_statements *);
 struct symbol * find_symbol(char * name);
