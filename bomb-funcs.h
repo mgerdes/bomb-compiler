@@ -9,6 +9,7 @@
 #define JMP(label, label_num) printf("\tJMP\t%s_%d\n", label, label_num);
 #define LABEL(label, label_num) printf("%s_%d:\n", label, label_num);
 #define ADD(op1, op2) printf("\tADD\t%s, %s\n", op1, op2);
+#define ADD_NUM(op1, op2) printf("\tADD\t%s, %d\n", op1, op2);
 #define SUB(op1, op2) printf("\tSUB\t%s, %s\n", op1, op2);
 #define SUB_NUM(op1, op2) printf("\tSUB\t%s, %d\n", op1, op2);
 #define MOV(op1, op2) printf("\tMOV\t%s, %s\n", op1, op2);

@@ -115,11 +115,12 @@ void gen_code_for_function_call(struct function_call_node * function_call) {
         gen_code(parameters->expression);
         MOV("BX", "Parameters");
         ADD("BX", "Parameter_Offset");
+        ADD_NUM("BX", total_offset);
         MOV("[BX]", "AX");
-        ADD("Parameter_Offset", "2");
         total_offset += 2;
         parameters = parameters->rest_of_parameters;
     }
+    ADD_NUM("Parameter_Offset", total_offset);
     CALL(function_call->symbol->name);
     SUB_NUM("Parameter_Offset", total_offset); 
 }
