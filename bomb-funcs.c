@@ -80,7 +80,14 @@ void gen_code_for_boolean_expression(struct boolean_node *boolean) {
 
 void gen_code_for_symbol(struct symbol *symbol) {
     static char op1 [50];
-    snprintf(op1, 50, "[GlobalVariables + %d]", symbol->offset);
+    if (symbol->is_local_to_function) {
+        MOV("BX", "OFFSET Parameters");
+        ADD("BX", "Parameter_Offset");
+        SUB_NUM("BX", symbol->offset);
+        snprintf(op1, 50, "[BX]");
+    } else {
+        snprintf(op1, 50, "[GlobalVariables + %d]", symbol->offset);
+    }
     MOV("AX", op1);
 }
 
@@ -113,7 +120,7 @@ void gen_code_for_function_call(struct function_call_node * function_call) {
     int total_offset = 0;
     while (parameters) {
         gen_code(parameters->expression);
-        MOV("BX", "Parameters");
+        MOV("BX", "OFFSET Parameters");
         ADD("BX", "Parameter_Offset");
         ADD_NUM("BX", total_offset);
         MOV("[BX]", "AX");
@@ -252,12 +259,26 @@ struct list_of_parameters * new_list_of_parameters(struct ast * expression, stru
     return new_list;
 }
 
+struct list_of_parameter_symbols * new_list_of_parameter_symbols(struct symbol * symbol, struct list_of_parameter_symbols * list) {
+    struct list_of_parameter_symbols * new_list = (struct list_of_parameter_symbols *) malloc(sizeof(struct list_of_parameter_symbols));
+    new_list->symbol = symbol;
+    new_list->rest_of_symbols = list;
+    return new_list;
+}
+
 struct function * new_function(struct symbol * symbol, struct list_of_parameter_symbols * parameters, struct list_of_statements * statements) {
     static int number_of_functions = 0;
+    int parameter_offset = 2;
     struct function * new_function = (struct function *) malloc(sizeof(struct function));
     new_function->number = number_of_functions++;
     new_function->symbol = symbol;
     new_function->parameters = parameters;
+    while(parameters) {
+        parameters->symbol->is_local_to_function = 1;
+        parameters->symbol->offset = parameter_offset;
+        parameter_offset += 2;
+        parameters = parameters->rest_of_symbols;
+    }
     new_function->statements = statements;
     return new_function;
 }
@@ -284,6 +305,7 @@ struct symbol * find_symbol(char * name) {
         if (!symbol->name) {
             symbol->name = strdup(name);
             symbol->type = 's';
+            symbol->is_local_to_function = 0;
             symbol->offset = current_offset;
             current_offset += 2;
             return symbol;

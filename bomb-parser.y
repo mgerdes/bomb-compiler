@@ -14,6 +14,7 @@
     struct function *function;
     struct list_of_parameter_symbols *list_parameters;
     struct list_of_function_definitions *functions;
+    struct list_of_parameter_symbols *function_parameters;
 }
 
 %token IF
@@ -58,8 +59,8 @@
 %type <integer> NUMBER
 %type <ast> program statements statement if_statement expression arithmetic_expression boolean_expression assignment SYMBOL while_loop function_call list_parameters 
 %type <function> function_definition
-%type <list_parameters> list_definition_parameters
 %type <functions> function_definitions
+%type <function_parameters> list_definition_parameters
 
 %%
 
@@ -160,9 +161,9 @@ function_definition
 
 list_definition_parameters
     : 
-        { $$ = NULL; }
+        {  }
     | SYMBOL 
-        { $$ = NULL; }
-    | SYMBOL COMMA list_definition_parameters 
-        { $$ = NULL; }
+        { $$ = new_list_of_parameter_symbols($1, NULL);  }
+    | list_definition_parameters COMMA SYMBOL 
+        { $$ = new_list_of_parameter_symbols($3, $1);  }
     ;

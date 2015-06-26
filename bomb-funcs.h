@@ -65,6 +65,7 @@ struct while_node {
 
 struct symbol {
     int type;
+    int is_local_to_function;
     char * name;
     int offset;
 };
@@ -118,5 +119,6 @@ struct ast * new_list_of_statements_node(struct ast *, struct ast *);
 struct ast * new_function_call_node(struct symbol *, struct list_of_parameters *);
 struct list_of_function_definitions * new_function_definitions_list(struct function *, struct list_of_function_definitions *);
 struct list_of_parameters * new_list_of_parameters(struct ast *, struct list_of_parameters *);
+struct list_of_parameter_symbols * new_list_of_parameter_symbols(struct symbol *, struct list_of_parameter_symbols *);
 struct function * new_function(struct symbol *, struct list_of_parameter_symbols *, struct list_of_statements *);
 struct symbol * find_symbol(char * name);
