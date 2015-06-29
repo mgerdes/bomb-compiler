@@ -5,7 +5,7 @@ Currently only supports the integer (16-bit) datatype.
 Support for arrays is hopefully coming soon.
 
 # Example program to compute nth fibonacci
-`
+```  
 fib(8)
 
 def fib(n)
@@ -15,4 +15,4 @@ def fib(n)
         fib(n - 1) + fib(n - 2)
     end
 end
-`
+```
