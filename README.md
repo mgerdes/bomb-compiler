@@ -1,10 +1,18 @@
 A bomb compiler that targets the 8086 assembly language.
-Mostly here to learn about compilers / parsers /lexers /code generation.
+Mostly here to learn about compilers / parsers / lexers / code generation.
 
 Currently only supports the integer (16-bit) datatype.
 Support for arrays is hopefully coming soon.
 
-# Example program to compute nth fibonacci
+# Compiling
+Rune `make` to compile the program and create the executable file `bomb-gen`.
+
+Then pipe your source file into `bomb-gen`. Example:
+```
+./bomb.gen < testing.bmb
+```
+
+# Bomb Program to Compute Fibonacci
 ```  
 fib(8)
 
