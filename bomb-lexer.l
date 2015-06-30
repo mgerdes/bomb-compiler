@@ -9,6 +9,8 @@ letter_or_digit {letter}|{digit}
 number {digit}+
 symbol {letter}{letter_or_digit}*
 
+string \"(\\.|[^"])*\"
+
 whitespace [\n\t ]*
 
 %%
@@ -51,6 +53,11 @@ whitespace [\n\t ]*
 {symbol} { 
     yylval.symbol = find_symbol(yytext);
     return SYMBOL; 
+}
+
+{string} {
+    yylval.string = strdup(yytext);
+    return STRING;
 }
 
 {whitespace} {}

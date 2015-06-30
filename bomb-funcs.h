@@ -68,6 +68,11 @@ struct while_node {
     struct ast * statement;
 };
 
+struct string_node {
+    int type;
+    char * string;
+};
+
 struct symbol {
     int type;
     int is_local_to_function;
@@ -128,6 +133,7 @@ struct ast * new_while_node(struct ast *, struct ast *);
 struct ast * new_list_of_statements_node(struct ast *, struct ast *);
 struct ast * new_function_call_node(struct symbol *, struct list_of_parameters *);
 struct ast * new_array_node(struct list_of_expressions *);
+struct ast * new_string_node(char *);
 struct list_of_function_definitions * new_function_definitions_list(struct function *, struct list_of_function_definitions *);
 struct list_of_parameters * new_list_of_parameters(struct ast *, struct list_of_parameters *);
 struct list_of_parameter_symbols * new_list_of_parameter_symbols(struct symbol *, struct list_of_parameter_symbols *);

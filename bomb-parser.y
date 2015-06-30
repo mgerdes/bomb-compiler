@@ -10,6 +10,7 @@
     struct ast *ast;
     int integer;
     struct symbol *symbol;
+    char *string;
 
     struct function *function;
     struct list_of_parameter_symbols *list_parameters;
@@ -45,11 +46,14 @@
 
 %token NUMBER
 %token SYMBOL
+%token STRING
 
 %token OPEN_BRACKET
 %token CLOSE_BRACKET
 %token OPEN_PAREN
 %token CLOSE_PAREN
+%token OPEN_QUOTE
+%token CLOSE_QUOTE
 %token COMMA
 
 %left EQUAL
@@ -62,6 +66,7 @@
 %left GREATER_THEN_EQUAL LESS_THEN_EQUAL EQUAL_EQUAL GREATER_THEN LESS_THEN 
 
 %type <integer> NUMBER
+%type <string> STRING
 %type <ast> program statements statement if_statement expression arithmetic_expression boolean_expression assignment SYMBOL while_loop function_call list_parameters array array_lookup
 %type <function> function_definition
 %type <functions> function_definitions
@@ -112,6 +117,8 @@ expression
     | assignment
     | array
     | array_lookup
+    | STRING 
+        { $$ = new_string_node($1); }
     ;
 
 array_lookup

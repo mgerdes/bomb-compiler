@@ -2,6 +2,8 @@ fib(8)
 
 x = [10,10,10,10]
 
+string2 = "hello world!"
+
 def fib(n)
     if n == 1 or n == 2
         1

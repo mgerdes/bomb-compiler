@@ -160,6 +160,25 @@ void gen_code_for_array(struct array_node * array) {
     POP("AX");
 }
 
+void gen_code_for_string(struct string_node * string_node) {
+    static char op1 [50];
+    char * string = string_node->string;
+    MOV("BX", "OFFSET GlobalVariables");
+    ADD_NUM("BX", current_offset); 
+    PUSH("BX");
+    string++;
+    while (*string != '"') {
+        snprintf(op1, 50, "[GlobalVariables + %d]", current_offset);
+        MOV_NUM(op1, *string);
+        current_offset++;
+        string++;
+    }
+    snprintf(op1, 50, "[GlobalVariables + %d]", current_offset);
+    MOV_NUM(op1, '$');
+    current_offset++;
+    POP("AX");
+}
+
 void gen_code(struct ast *ast) {
     if (!ast) return;
     static int number_of_if_statements;
@@ -195,6 +214,9 @@ void gen_code(struct ast *ast) {
             break;
         case 'y':
             gen_code_for_array((struct array_node *) ast);
+            break;
+        case 't':
+            gen_code_for_string((struct string_node *) ast);
             break;
     }
 
@@ -316,6 +338,13 @@ struct function * new_function(struct symbol * symbol, struct list_of_parameter_
     }
     new_function->statements = statements;
     return new_function;
+}
+
+struct ast * new_string_node(char * string) {
+    struct string_node * new_string = (struct string_node *) malloc(sizeof(struct string_node));
+    new_string->type = 't';
+    new_string->string = string;
+    return (struct ast *) new_string;
 }
 
 int symbol_hash(char * name) {
