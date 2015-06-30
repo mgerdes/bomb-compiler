@@ -1,4 +1,6 @@
-fib(1)
+fib(8)
+
+x = [10,10,10,10]
 
 def fib(n)
     if n == 1 or n == 2

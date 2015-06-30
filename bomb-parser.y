@@ -15,6 +15,7 @@
     struct list_of_parameter_symbols *list_parameters;
     struct list_of_function_definitions *functions;
     struct list_of_parameter_symbols *function_parameters;
+    struct list_of_expressions *list_of_expressions;
 }
 
 %token IF
@@ -45,6 +46,8 @@
 %token NUMBER
 %token SYMBOL
 
+%token OPEN_BRACKET
+%token CLOSE_BRACKET
 %token OPEN_PAREN
 %token CLOSE_PAREN
 %token COMMA
@@ -57,10 +60,11 @@
 %left GREATER_THEN_EQUAL LESS_THEN_EQUAL EQUAL_EQUAL GREATER_THEN LESS_THEN 
 
 %type <integer> NUMBER
-%type <ast> program statements statement if_statement expression arithmetic_expression boolean_expression assignment SYMBOL while_loop function_call list_parameters 
+%type <ast> program statements statement if_statement expression arithmetic_expression boolean_expression assignment SYMBOL while_loop function_call list_parameters array
 %type <function> function_definition
 %type <functions> function_definitions
 %type <function_parameters> list_definition_parameters
+%type <list_of_expressions> list_of_expressions
 
 %%
 
@@ -104,6 +108,19 @@ expression
     | boolean_expression
     | arithmetic_expression
     | assignment
+    | array
+    ;
+
+array
+    : OPEN_BRACKET list_of_expressions CLOSE_BRACKET
+        { $$ = new_array_node($2); }
+    ;
+
+list_of_expressions
+    : expression
+        { $$ = new_list_of_expressions($1, NULL); }
+    | expression COMMA list_of_expressions
+        { $$ = new_list_of_expressions($1, $3); }
     ;
 
 assignment

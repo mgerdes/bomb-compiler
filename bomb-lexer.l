@@ -37,6 +37,8 @@ whitespace [\n\t ]*
 "unless" { return UNLESS; }
 "for" { return FOR; }
 "def" { return DEF; }
+"[" { return OPEN_BRACKET; }
+"]" { return CLOSE_BRACKET; }
 "(" { return OPEN_PAREN; }
 ")" { return CLOSE_PAREN; }
 "," { return COMMA; }

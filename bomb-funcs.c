@@ -4,6 +4,8 @@
 
 #include "bomb-funcs.h"
 
+int current_offset = 0;
+
 void gen_code_for_if_statement(struct if_statement_node *if_statement, int if_statement_number) {
     gen_code(if_statement->boolean_expression);
     CMP("AX", "0");
@@ -142,6 +144,22 @@ void gen_code_for_functions(struct list_of_function_definitions * functions) {
     }
 }
 
+void gen_code_for_array(struct array_node * array) {
+    static char op1 [50];
+    struct list_of_expressions * expressions = array->list_of_expressions;    
+    MOV("BX", "OFFSET GlobalVariables");
+    ADD_NUM("BX", current_offset); 
+    PUSH("BX");
+    while (expressions) {
+        gen_code(expressions->expression);
+        snprintf(op1, 50, "[GlobalVariables + %d]", current_offset);
+        current_offset += 2;
+        MOV(op1, "AX");
+        expressions = expressions->rest_of_list;
+    }
+    POP("AX");
+}
+
 void gen_code(struct ast *ast) {
     if (!ast) return;
     static int number_of_if_statements;
@@ -174,6 +192,9 @@ void gen_code(struct ast *ast) {
             break;
         case 'f':
             gen_code_for_function_call((struct function_call_node *) ast);
+            break;
+        case 'y':
+            gen_code_for_array((struct array_node *) ast);
             break;
     }
 
@@ -245,6 +266,20 @@ struct ast * new_function_call_node(struct symbol * symbol, struct list_of_param
     return (struct ast *) new_function_call;
 }
 
+struct ast * new_array_node(struct list_of_expressions * list_of_expressions) {
+    struct array_node * new_array_node = (struct array_node *) malloc(sizeof(struct array_node));
+    new_array_node->type = 'y';
+    new_array_node->list_of_expressions = list_of_expressions;
+    return (struct ast *) new_array_node;
+}
+
+struct list_of_expressions * new_list_of_expressions(struct ast * expression, struct list_of_expressions * rest_of_list) {
+    struct list_of_expressions * new_list_of_expressions = (struct list_of_expressions *) malloc(sizeof(struct list_of_expressions));
+    new_list_of_expressions->expression = expression;
+    new_list_of_expressions->rest_of_list = rest_of_list;
+    return new_list_of_expressions;
+}
+
 struct list_of_function_definitions * new_function_definitions_list(struct function * function, struct list_of_function_definitions * rest_of_functions) {
     struct list_of_function_definitions * new_list = (struct list_of_function_definitions *) malloc(sizeof(struct list_of_function_definitions));
     new_list->function = function;
@@ -282,8 +317,6 @@ struct function * new_function(struct symbol * symbol, struct list_of_parameter_
     new_function->statements = statements;
     return new_function;
 }
-
-int current_offset = 0;
 
 int symbol_hash(char * name) {
     int hash = 0;
