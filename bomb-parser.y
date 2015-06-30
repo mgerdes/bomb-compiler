@@ -53,6 +53,8 @@
 %token COMMA
 
 %left EQUAL
+%left SYMBOL
+%left OPEN_BRACKET CLOSE_BRACKET
 %right PLUS_PLUS MINUS_MINUS
 %left AND OR
 %left TIMES DIVIDE
@@ -60,7 +62,7 @@
 %left GREATER_THEN_EQUAL LESS_THEN_EQUAL EQUAL_EQUAL GREATER_THEN LESS_THEN 
 
 %type <integer> NUMBER
-%type <ast> program statements statement if_statement expression arithmetic_expression boolean_expression assignment SYMBOL while_loop function_call list_parameters array
+%type <ast> program statements statement if_statement expression arithmetic_expression boolean_expression assignment SYMBOL while_loop function_call list_parameters array array_lookup
 %type <function> function_definition
 %type <functions> function_definitions
 %type <function_parameters> list_definition_parameters
@@ -109,6 +111,12 @@ expression
     | arithmetic_expression
     | assignment
     | array
+    | array_lookup
+    ;
+
+array_lookup
+    : SYMBOL OPEN_BRACKET expression CLOSE_BRACKET
+        { $$ = NULL; }
     ;
 
 array
