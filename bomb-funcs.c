@@ -30,6 +30,14 @@ void gen_code_for_arithmetic_expression(struct arithmetic_node *arithmetic) {
             SUB("BX", "AX");
             MOV("AX", "BX");
             break;
+        case '*':
+            MUL("BX");
+            break;
+        case '/':
+            XCHG("BX", "AX");
+            XOR("DX", "DX");
+            DIV("BX");
+            break;
     }
 }
 
@@ -394,25 +402,25 @@ void init() {
     MOV("DS", "AX");
 }
 
-void printStr_proc() {
-    BEGIN_PROC("printStr");
+void put_str_proc() {
+    BEGIN_PROC("put_str");
     MOV("BX", "OFFSET Parameters");
     ADD("BX", "Parameter_Offset");
     SUB("BX", "2");
     printf("\t_PutStr\tWORD PTR [BX]\n");
     RET();
-    END_PROC("printStr");
+    END_PROC("put_str");
 }
 
-void printDec_proc() {
-    BEGIN_PROC("printDec");
+void put_dec_proc() {
+    BEGIN_PROC("put_dec");
     MOV("BX", "OFFSET Parameters");
     ADD("BX", "Parameter_Offset");
     SUB("BX", "2");
     MOV("AX", "WORD PTR [BX]");
     printf("\tCALL\tPutDec\n");
     RET();
-    END_PROC("printDec");
+    END_PROC("put_dec");
 }
 
 void end_main_proc() {
@@ -423,7 +431,7 @@ void end_main_proc() {
 }
 
 void end_program() {
-    printStr_proc();
-    printDec_proc();
+    put_str_proc();
+    put_dec_proc();
     printf("\tEND main\n");
 }

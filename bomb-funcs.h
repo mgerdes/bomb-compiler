@@ -12,10 +12,14 @@
 #define ADD_NUM(op1, op2) printf("\tADD\t%s, %d\n", op1, op2);
 #define SUB(op1, op2) printf("\tSUB\t%s, %s\n", op1, op2);
 #define SUB_NUM(op1, op2) printf("\tSUB\t%s, %d\n", op1, op2);
+#define MUL(op) printf("\tMUL\t%s\n", op);
+#define DIV(op) printf("\tDIV\t%s\n", op);
 #define MOV(op1, op2) printf("\tMOV\t%s, %s\n", op1, op2);
 #define MOV_NUM(op1, num) printf("\tMOV\t%s, %d\n", op1, num);
 #define CMP(op1, op2) printf("\tCMP\t%s, %s\n", op1, op2);
 #define SHR(op1, op2) printf("\tSHR\t%s, %s\n", op1, op2);
+#define XOR(op1, op2) printf("\tXOR\t%s, %s\n", op1, op2);
+#define XCHG(op1, op2) printf("\tXCHG\t%s, %s\n", op1, op2);
 #define OR(op1, op2) printf("\tOR\t%s, %s\n", op1, op2);
 #define AND(op1, op2) printf("\tAND\t%s, %s\n", op1, op2);
 #define BEGIN_PROC(op) printf("%s PROC\n", op);

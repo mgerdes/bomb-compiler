@@ -159,6 +159,10 @@ arithmetic_expression
         { $$ = new_arithmetic_node('+', $1, $3); }
     | expression MINUS expression
         { $$ = new_arithmetic_node('-', $1, $3); }
+    | expression TIMES expression
+        { $$ = new_arithmetic_node('*', $1, $3); }
+    | expression DIVIDE expression
+        { $$ = new_arithmetic_node('/', $1, $3); }
     ;
 
 if_statement
