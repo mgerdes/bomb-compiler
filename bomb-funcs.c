@@ -88,7 +88,7 @@ void gen_code_for_symbol(struct symbol *symbol) {
         SUB_NUM("BX", symbol->offset);
         snprintf(op1, 50, "[BX]");
     } else {
-        snprintf(op1, 50, "[GlobalVariables + %d]", symbol->offset);
+        snprintf(op1, 50, "WORD PTR [GlobalVariables + %d]", symbol->offset);
     }
     MOV("AX", op1);
 }
@@ -96,7 +96,7 @@ void gen_code_for_symbol(struct symbol *symbol) {
 void gen_code_for_assignment(struct assignment_node *assignment) {
     gen_code(assignment->expression);
     static char op1 [50];
-    snprintf(op1, 50, "[GlobalVariables + %d]", assignment->symbol->offset);
+    snprintf(op1, 50, "WORD PTR [GlobalVariables + %d]", assignment->symbol->offset);
     MOV(op1, "AX");
 }
 
@@ -125,7 +125,7 @@ void gen_code_for_function_call(struct function_call_node * function_call) {
         MOV("BX", "OFFSET Parameters");
         ADD("BX", "Parameter_Offset");
         ADD_NUM("BX", total_offset);
-        MOV("[BX]", "AX");
+        MOV("WORD PTR [BX]", "AX");
         total_offset += 2;
         parameters = parameters->rest_of_parameters;
     }
@@ -152,7 +152,7 @@ void gen_code_for_array(struct array_node * array) {
     PUSH("BX");
     while (expressions) {
         gen_code(expressions->expression);
-        snprintf(op1, 50, "[GlobalVariables + %d]", current_offset);
+        snprintf(op1, 50, "WORD PTR [GlobalVariables + %d]", current_offset);
         current_offset += 2;
         MOV(op1, "AX");
         expressions = expressions->rest_of_list;
@@ -168,12 +168,12 @@ void gen_code_for_string(struct string_node * string_node) {
     PUSH("BX");
     string++;
     while (*string != '"') {
-        snprintf(op1, 50, "[GlobalVariables + %d]", current_offset);
+        snprintf(op1, 50, "BYTE PTR [GlobalVariables + %d]", current_offset);
         MOV_NUM(op1, *string);
         current_offset++;
         string++;
     }
-    snprintf(op1, 50, "[GlobalVariables + %d]", current_offset);
+    snprintf(op1, 50, "BYTE PTR [GlobalVariables + %d]", current_offset);
     MOV_NUM(op1, '$');
     current_offset++;
     POP("AX");
@@ -383,6 +383,7 @@ void init() {
     printf("\t.386\n"); 
     printf("\t.STACK\t100h\n"); 
     printf("\t.DATA\n"); 
+    printf("INCLUDE\tPCMAC.INC\n"); 
     printf("GlobalVariables DW 500 DUP (?)\n");
     printf("Parameters DW 500 DUP (?)\n");
     printf("Parameter_Offset DW ?\n");
@@ -393,6 +394,27 @@ void init() {
     MOV("DS", "AX");
 }
 
+void printStr_proc() {
+    BEGIN_PROC("printStr");
+    MOV("BX", "OFFSET Parameters");
+    ADD("BX", "Parameter_Offset");
+    SUB("BX", "2");
+    printf("\t_PutStr\tWORD PTR [BX]\n");
+    RET();
+    END_PROC("printStr");
+}
+
+void printDec_proc() {
+    BEGIN_PROC("printDec");
+    MOV("BX", "OFFSET Parameters");
+    ADD("BX", "Parameter_Offset");
+    SUB("BX", "2");
+    MOV("AX", "WORD PTR [BX]");
+    printf("\tCALL\tPutDec\n");
+    RET();
+    END_PROC("printDec");
+}
+
 void end_main_proc() {
     MOV("AL", "0");
     MOV("AH", "4CH");
@@ -401,5 +423,7 @@ void end_main_proc() {
 }
 
 void end_program() {
+    printStr_proc();
+    printDec_proc();
     printf("\tEND main\n");
 }

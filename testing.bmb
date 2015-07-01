@@ -1,8 +1,5 @@
-fib(8)
-
-x = [10,10,10,10]
-
-string2 = "hello world!"
+printStr("Eigth fibonacci is : ")
+printDec(fib(8))
 
 def fib(n)
     if n == 1 or n == 2
