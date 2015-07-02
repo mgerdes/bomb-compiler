@@ -104,6 +104,11 @@ void gen_code_for_symbol(struct symbol *symbol) {
 void gen_code_for_assignment(struct assignment_node *assignment) {
     gen_code(assignment->expression);
     static char op1 [50];
+    if (assignment->expression->type == 't') {
+        assignment->symbol->data_type = 't';
+    } else {
+        assignment->symbol->data_type = 'i';
+    }
     snprintf(op1, 50, "WORD PTR [GlobalVariables + %d]", assignment->symbol->offset);
     MOV(op1, "AX");
 }
@@ -187,6 +192,21 @@ void gen_code_for_string(struct string_node * string_node) {
     POP("AX");
 }
 
+void gen_code_for_array_lookup(struct array_lookup_node * array_lookup) {
+    gen_code(array_lookup->expression);
+    MOV("BX", "OFFSET GlobalVariables");
+    ADD_NUM("BX", array_lookup->symbol->offset);
+    MOV("BX", "WORD PTR [BX]");  
+    ADD("BX", "AX");
+    if (array_lookup->symbol->data_type == 't') {
+        MOV("AL", "BYTE PTR [BX]");  
+        XOR("AH", "AH");
+    } else {
+        ADD("BX", "AX");
+        MOV("AX", "WORD PTR [BX]");
+    }
+}
+
 void gen_code(struct ast *ast) {
     if (!ast) return;
     static int number_of_if_statements;
@@ -225,6 +245,9 @@ void gen_code(struct ast *ast) {
             break;
         case 't':
             gen_code_for_string((struct string_node *) ast);
+            break;
+        case 'A':
+            gen_code_for_array_lookup((struct array_lookup_node *) ast);
             break;
     }
 
@@ -353,6 +376,14 @@ struct ast * new_string_node(char * string) {
     new_string->type = 't';
     new_string->string = string;
     return (struct ast *) new_string;
+}
+
+struct ast * new_array_lookup_node(struct symbol * symbol, struct ast * expression) {
+    struct array_lookup_node * new_array_lookup = (struct array_lookup_node *) malloc(sizeof(struct array_lookup_node));    
+    new_array_lookup->type = 'A';
+    new_array_lookup->symbol = symbol;
+    new_array_lookup->expression = expression;
+    return (struct ast *) new_array_lookup;
 }
 
 int symbol_hash(char * name) {

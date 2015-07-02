@@ -79,6 +79,7 @@ struct string_node {
 
 struct symbol {
     int type;
+    int data_type;
     int is_local_to_function;
     char * name;
     int offset;
@@ -99,6 +100,12 @@ struct function_call_node {
     int type;
     struct symbol * symbol;
     struct list_of_parameters * parameters;
+};
+
+struct array_lookup_node {
+    int type;
+    struct symbol * symbol;
+    struct ast * expression;
 };
 
 struct function {
@@ -138,6 +145,7 @@ struct ast * new_list_of_statements_node(struct ast *, struct ast *);
 struct ast * new_function_call_node(struct symbol *, struct list_of_parameters *);
 struct ast * new_array_node(struct list_of_expressions *);
 struct ast * new_string_node(char *);
+struct ast * new_array_lookup_node(struct symbol *, struct ast *);
 struct list_of_function_definitions * new_function_definitions_list(struct function *, struct list_of_function_definitions *);
 struct list_of_parameters * new_list_of_parameters(struct ast *, struct list_of_parameters *);
 struct list_of_parameter_symbols * new_list_of_parameter_symbols(struct symbol *, struct list_of_parameter_symbols *);
