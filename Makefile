@@ -2,7 +2,7 @@ SYSTEM=dos
 NAME=testing
 LIBS=lib/util.lib
 
-bomb-gen:
+bomb-gen: bomb-lexer.l bomb-parser.y
 	flex ./bomb-lexer.l 
 	bison ./bomb-parser.y
 	gcc ./lex.yy.c ./bomb-funcs.c -lfl -o bomb-gen
@@ -14,4 +14,4 @@ assemble: gen
 run: assemble
 	dosbox $(NAME).exe
 clean: 
-	rm ./bomb-parser.tab.c ./lex.yy.c ./bomb-gen ./*.asm ./*.o ./*.exe
+	rm ./bomb-parser.tab.c ./lex.yy.c ./bomb-gen ./*.asm ./*.o ./*.exe ./*.err

@@ -9,6 +9,8 @@ letter_or_digit {letter}|{digit}
 number {digit}+
 symbol {letter}{letter_or_digit}*
 
+character \'.\'
+
 string \"(\\.|[^"])*\"
 
 whitespace [\n\t ]*
@@ -58,6 +60,11 @@ whitespace [\n\t ]*
 {string} {
     yylval.string = strdup(yytext);
     return STRING;
+}
+
+{character} {
+    yylval.integer = yytext[1];
+    return NUMBER;
 }
 
 {whitespace} {}

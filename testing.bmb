@@ -1,21 +1,42 @@
 array = [5, 6, 7]
 
+newline = "  "
+newline[0] = 13
+newline[1] = 10
+
 put_dec(array[0])
+put_str(newline)
 put_dec(array[1])
+put_str(newline)
 put_dec(array[2])
+put_str(newline)
 
 array[0] = 1
 array[1] = 2
 array[2] = 3
 
 put_dec(array[0])
+put_str(newline)
 put_dec(array[1])
+put_str(newline)
 put_dec(array[2])
+put_str(newline)
 
-hello = "Heilo World!"
+hello = "Hello World!  "
+hello[12] = 13
+hello[13] = 10
 put_str(hello)
 
-hello[0] = 100
+i = 0
+while i < 10
+    if hello[i] == 'l'
+        hello[i] = 'i'
+    else 
+        hello[i] = hello[i]
+    end
+    i = i + 1
+end
+
 put_str(hello)
 
 def fib(n)

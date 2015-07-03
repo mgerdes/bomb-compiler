@@ -4,3 +4,4 @@ bomb-parser.tab.c
 *.o
 *.exe
 *.asm
+*.err
