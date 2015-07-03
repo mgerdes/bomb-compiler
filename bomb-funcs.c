@@ -113,6 +113,23 @@ void gen_code_for_assignment(struct assignment_node *assignment) {
     MOV(op1, "AX");
 }
 
+void gen_code_for_array_lookup_assignment(struct array_lookup_assignment_node * assignment) {
+    gen_code(assignment->array_lookup->expression);
+    MOV("BX", "OFFSET GlobalVariables");
+    ADD_NUM("BX", assignment->array_lookup->symbol->offset);
+    MOV("BX", "WORD PTR [BX]");
+    ADD("BX", "AX");
+    if (assignment->array_lookup->symbol->data_type != 't') {
+        ADD("BX", "AX");
+    }
+    gen_code(assignment->expression);
+    if (assignment->array_lookup->symbol->data_type == 't') {
+        MOV("BYTE PTR [BX]", "AL");
+    } else {
+        MOV("WORD PTR [BX]", "AX");
+    }
+}
+
 void gen_code_for_while(struct while_node *while_node, int while_loop_number) {
     LABEL("WHILE_LOOP", while_loop_number);
     gen_code(while_node->expression);
@@ -231,6 +248,9 @@ void gen_code(struct ast *ast) {
         case 'a':
             gen_code_for_assignment((struct assignment_node *) ast);        
             break;
+        case 'L':
+            gen_code_for_array_lookup_assignment((struct array_lookup_assignment_node *) ast);        
+            break;
         case 'w':
             gen_code_for_while((struct while_node *) ast, number_of_while_loops++);        
             break;
@@ -291,6 +311,14 @@ struct ast * new_assignment_node(struct symbol * symbol, struct ast * expression
     struct assignment_node *new_assignment = (struct assignment_node *) malloc(sizeof(struct assignment_node));
     new_assignment->type = 'a';
     new_assignment->symbol = symbol;
+    new_assignment->expression = expression;
+    return (struct ast *) new_assignment;
+}
+
+struct ast * new_array_lookup_assignment_node(struct array_lookup_node * array_lookup, struct ast * expression) {
+    struct array_lookup_assignment_node * new_assignment = (struct array_lookup_assignment_node *) malloc(sizeof(struct array_lookup_assignment_node));
+    new_assignment->type = 'L';
+    new_assignment->array_lookup = array_lookup;
     new_assignment->expression = expression;
     return (struct ast *) new_assignment;
 }

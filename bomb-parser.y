@@ -123,7 +123,7 @@ expression
 
 array_lookup
     : SYMBOL OPEN_BRACKET expression CLOSE_BRACKET
-        { $$ = new_array_lookup_node($1, $3); }
+        { $$ = new_array_lookup_node((struct array_lookup_node *) $1, $3); }
     ;
 
 array
@@ -142,7 +142,7 @@ assignment
     : SYMBOL EQUAL expression 
         { $$ = new_assignment_node((struct symbol *) $1, $3); }
     | array_lookup EQUAL expression
-        
+        { $$ = new_array_lookup_assignment_node($1, $3); }        
     ;
 
 boolean_expression

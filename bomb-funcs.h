@@ -66,6 +66,12 @@ struct assignment_node {
     struct ast * expression;
 };
 
+struct array_lookup_assignment_node {
+    int type;
+    struct array_lookup_node * array_lookup;
+    struct ast * expression;
+};
+
 struct while_node {
     int type;
     struct ast * expression;
