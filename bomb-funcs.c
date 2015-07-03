@@ -450,7 +450,7 @@ void init() {
     printf("\t.386\n"); 
     printf("\t.STACK\t100h\n"); 
     printf("\t.DATA\n"); 
-    printf("INCLUDE\tPCMAC.INC\n"); 
+    printf("INCLUDE\tmacros/PCMAC.INC\n"); 
     printf("GlobalVariables DW 500 DUP (?)\n");
     printf("Parameters DW 500 DUP (?)\n");
     printf("Parameter_Offset DW ?\n");

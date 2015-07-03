@@ -1,13 +1,18 @@
+SYSTEM=dos
+NAME=testing
+LIBS=lib/util.lib
+
 bomb-gen:
 	flex ./bomb-lexer.l 
 	bison ./bomb-parser.y
 	gcc ./lex.yy.c ./bomb-funcs.c -lfl -o bomb-gen
 gen: bomb-gen
-	./bomb-gen < testing.bmb
-run: bomb-gen
 	./bomb-gen < testing.bmb > testing.asm
-	jwasm testing.asm
-	jwlink SYS dos F testing L util.lib
-	dosbox testing.exe
-clean: bomb-gen
-	rm ./bomb-parser.tab.c ./lex.yy.c ./bomb-gen
+assemble: gen
+	jwasm $(NAME).asm
+	jwlink SYS $(SYSTEM) F $(NAME) L $(LIBS)
+	jwlink SYS $(SYSTEM) F $(NAME) L $(LIBS)
+run: assemble
+	dosbox $(NAME).exe
+clean: 
+	rm ./bomb-parser.tab.c ./lex.yy.c ./bomb-gen ./*.asm ./*.o ./*.exe

@@ -1,3 +1,6 @@
 bomb-gen
 lex.yy.c
 bomb-parser.tab.c
+*.o
+*.exe
+*.asm

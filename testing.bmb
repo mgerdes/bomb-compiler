@@ -1,9 +1,23 @@
-put_dec(factorial(5))
+array = [5, 6, 7]
 
-def factorial(n) 
-    if n == 0 
-        1
-    else
-        n * factorial(n - 1)
-    end
+put_dec(array[0])
+put_dec(array[1])
+put_dec(array[2])
+
+array[0] = 1
+array[1] = 2
+array[2] = 3
+
+put_dec(array[0])
+put_dec(array[1])
+put_dec(array[2])
+
+hello = "Heilo World!"
+put_str(hello)
+
+hello[0] = 100
+put_str(hello)
+
+def fib(n)
+    n
 end
