@@ -5,11 +5,11 @@ Currently only supports the integer (16-bit) datatype.
 Support for arrays is hopefully coming soon.
 
 # Compiling
-Rune `make` to compile the program and create the executable file `bomb-gen`.
+Run `make` to compile the program and create the executable file `bomb-gen`.
 
 Then pipe your source file into `bomb-gen`. Example:
 ```
-./bomb.gen < testing.bmb
+./bomb-gen < testing.bmb
 ```
 
 # Bomb Program to Compute Fibonacci
