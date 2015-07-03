@@ -11,7 +11,6 @@ gen: bomb-gen
 assemble: gen
 	jwasm $(NAME).asm
 	jwlink SYS $(SYSTEM) F $(NAME) L $(LIBS)
-	jwlink SYS $(SYSTEM) F $(NAME) L $(LIBS)
 run: assemble
 	dosbox $(NAME).exe
 clean: 
