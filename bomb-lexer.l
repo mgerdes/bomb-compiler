@@ -47,6 +47,16 @@ whitespace [\n\t ]*
 ")" { return CLOSE_PAREN; }
 "," { return COMMA; }
 
+"Str" {
+    yylval.integer = 't';
+    return DATA_TYPE;
+}
+
+"Int" {
+    yylval.integer = 'i';
+    return DATA_TYPE;
+}
+
 {number} { 
     yylval.integer = atoi(yytext);
     return NUMBER; 

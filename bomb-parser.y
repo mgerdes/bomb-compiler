@@ -26,6 +26,7 @@
 %token WHILE
 %token FOR
 %token END
+%token DATA_TYPE
 
 %token GREATER_THEN_EQUAL
 %token LESS_THEN_EQUAL
@@ -65,7 +66,7 @@
 %left PLUS MINUS MOD
 %left GREATER_THEN_EQUAL LESS_THEN_EQUAL EQUAL_EQUAL GREATER_THEN LESS_THEN 
 
-%type <integer> NUMBER
+%type <integer> NUMBER DATA_TYPE
 %type <string> STRING
 %type <ast> program statements statement if_statement expression arithmetic_expression boolean_expression assignment SYMBOL while_loop function_call list_parameters array array_lookup
 %type <function> function_definition
@@ -193,15 +194,15 @@ function_definitions
     ;
 
 function_definition
-    : DEF SYMBOL OPEN_PAREN list_definition_parameters CLOSE_PAREN statement END
+    : DEF SYMBOL OPEN_PAREN list_definition_parameters CLOSE_PAREN statements END
         { $$ = new_function($2, $4, $6); }
     ;
 
 list_definition_parameters
     : 
         {  }
-    | SYMBOL 
-        { $$ = new_list_of_parameter_symbols($1, NULL);  }
-    | list_definition_parameters COMMA SYMBOL 
-        { $$ = new_list_of_parameter_symbols($3, $1);  }
+    | DATA_TYPE SYMBOL 
+        { $$ = new_list_of_parameter_symbols($1, $2, NULL);  }
+    | list_definition_parameters COMMA DATA_TYPE SYMBOL 
+        { $$ = new_list_of_parameter_symbols($3, $4, $1);  }
     ;

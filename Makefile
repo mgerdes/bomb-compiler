@@ -2,7 +2,7 @@ SYSTEM=dos
 NAME=testing
 LIBS=lib/util.lib
 
-bomb-gen: bomb-lexer.l bomb-parser.y
+bomb-gen: bomb-lexer.l bomb-parser.y bomb-funcs.c
 	flex ./bomb-lexer.l 
 	bison ./bomb-parser.y
 	gcc ./lex.yy.c ./bomb-funcs.c -lfl -o bomb-gen

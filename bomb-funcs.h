@@ -154,7 +154,7 @@ struct ast * new_string_node(char *);
 struct ast * new_array_lookup_node(struct symbol *, struct ast *);
 struct list_of_function_definitions * new_function_definitions_list(struct function *, struct list_of_function_definitions *);
 struct list_of_parameters * new_list_of_parameters(struct ast *, struct list_of_parameters *);
-struct list_of_parameter_symbols * new_list_of_parameter_symbols(struct symbol *, struct list_of_parameter_symbols *);
+struct list_of_parameter_symbols * new_list_of_parameter_symbols(int type, struct symbol *, struct list_of_parameter_symbols *);
 struct function * new_function(struct symbol *, struct list_of_parameter_symbols *, struct list_of_statements *);
 struct list_of_expressions * new_list_of_expressions(struct ast *, struct list_of_expressions *);
 struct symbol * find_symbol(char * name);

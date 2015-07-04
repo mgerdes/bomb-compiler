@@ -22,23 +22,15 @@ put_str(newline)
 put_dec(array[2])
 put_str(newline)
 
-hello = "Hello World!  "
-hello[12] = 13
-hello[13] = 10
-put_str(hello)
+hello = "Hello World!"
+toUpper(hello)
+put_str(newline)
 
-i = 0
-while i < 10
-    if hello[i] == 'l'
-        hello[i] = 'i'
-    else 
-        hello[i] = hello[i]
-    end
-    i = i + 1
+def toUpper(Str string)
+    put_str(string)
+    put_str(newline)
+    string[1] = 'h'
+    put_str(string)
+    put_str(newline)
 end
 
-put_str(hello)
-
-def fib(n)
-    n
-end

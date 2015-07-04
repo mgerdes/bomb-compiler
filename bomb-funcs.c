@@ -115,7 +115,12 @@ void gen_code_for_assignment(struct assignment_node *assignment) {
 
 void gen_code_for_array_lookup_assignment(struct array_lookup_assignment_node * assignment) {
     gen_code(assignment->array_lookup->expression);
-    MOV("BX", "OFFSET GlobalVariables");
+    if (assignment->array_lookup->symbol->is_local_to_function) {
+        MOV("BX", "OFFSET Parameters");
+        SUB("BX", "Parameter_Offset");
+    } else {
+        MOV("BX", "OFFSET GlobalVariables");
+    }
     ADD_NUM("BX", assignment->array_lookup->symbol->offset);
     MOV("BX", "WORD PTR [BX]");
     ADD("BX", "AX");
@@ -375,9 +380,10 @@ struct list_of_parameters * new_list_of_parameters(struct ast * expression, stru
     return new_list;
 }
 
-struct list_of_parameter_symbols * new_list_of_parameter_symbols(struct symbol * symbol, struct list_of_parameter_symbols * list) {
+struct list_of_parameter_symbols * new_list_of_parameter_symbols(int data_type, struct symbol * symbol, struct list_of_parameter_symbols * list) {
     struct list_of_parameter_symbols * new_list = (struct list_of_parameter_symbols *) malloc(sizeof(struct list_of_parameter_symbols));
     new_list->symbol = symbol;
+    new_list->symbol->data_type = data_type;
     new_list->rest_of_symbols = list;
     return new_list;
 }
