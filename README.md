@@ -14,9 +14,9 @@ Then pipe your source file into `bomb-gen`. Example:
 
 # Bomb Program to Compute Fibonacci
 ```  
-fib(8)
+put_dec(fib(8))
 
-def fib(n)
+def fib(Int n)
     if n == 1 or n == 2
         1
     else
