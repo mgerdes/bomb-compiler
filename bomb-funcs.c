@@ -424,7 +424,10 @@ int symbol_hash(char * name) {
     int hash = 0;
     char c;
 
-    while(c = *name++) hash = hash * 9 ^ c;
+    while(c = *name++) { 
+        hash = (hash * 9 ^ c) % SYMBOL_TABLE_SIZE;
+    }
+
     return hash % SYMBOL_TABLE_SIZE;
 }
 
