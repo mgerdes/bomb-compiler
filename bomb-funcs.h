@@ -5,6 +5,8 @@
 #define POP(op) printf("\tPOP\t%s\n", op);
 #define CALL(op) printf("\tCALL\t%s\n", op);
 #define INT(op) printf("\tINT\t%s\n", op);
+#define INC(op) printf("\tINC\t%s\n", op);
+#define DEC(op) printf("\tDEC\t%s\n", op);
 #define JE(label, label_num) printf("\tJE\t%s_%d\n", label, label_num);
 #define JMP(label, label_num) printf("\tJMP\t%s_%d\n", label, label_num);
 #define LABEL(label, label_num) printf("%s_%d:\n", label, label_num);

@@ -34,6 +34,7 @@
 %token LESS_THEN
 %token EQUAL
 %token EQUAL_EQUAL
+%token NOT_EQUAL
 %token AND
 %token OR
 
@@ -155,6 +156,8 @@ boolean_expression
         { $$ = new_boolean_node(3, $1, $3); }
     | expression LESS_THEN expression
         { $$ = new_boolean_node(4, $1, $3); }
+    | expression NOT_EQUAL expression
+        { $$ = new_boolean_node(5, $1, $3); }
     ;
 
 arithmetic_expression

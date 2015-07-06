@@ -85,6 +85,20 @@ void gen_code_for_boolean_expression(struct boolean_node *boolean) {
             MOV("AL", "AH");
             CBW();
             break;
+        case 5:
+            /* != */
+            gen_code(boolean->left);
+            PUSH("AX");
+            gen_code(boolean->right);
+            POP("BX");
+            CMP("AX", "BX");
+            LAHF();
+            SHR("AH", "6");
+            AND("AH", "1");
+            MOV("AL", "AH");
+            CBW();
+            DEC("AX");
+            break;
     }
 }
 
@@ -117,17 +131,20 @@ void gen_code_for_array_lookup_assignment(struct array_lookup_assignment_node * 
     gen_code(assignment->array_lookup->expression);
     if (assignment->array_lookup->symbol->is_local_to_function) {
         MOV("BX", "OFFSET Parameters");
-        SUB("BX", "Parameter_Offset");
+        ADD("BX", "Parameter_Offset");
+        SUB_NUM("BX", assignment->array_lookup->symbol->offset);
     } else {
         MOV("BX", "OFFSET GlobalVariables");
+        ADD_NUM("BX", assignment->array_lookup->symbol->offset);
     }
-    ADD_NUM("BX", assignment->array_lookup->symbol->offset);
     MOV("BX", "WORD PTR [BX]");
     ADD("BX", "AX");
     if (assignment->array_lookup->symbol->data_type != 't') {
         ADD("BX", "AX");
     }
+    PUSH("BX");
     gen_code(assignment->expression);
+    POP("BX");
     if (assignment->array_lookup->symbol->data_type == 't') {
         MOV("BYTE PTR [BX]", "AL");
     } else {
@@ -216,8 +233,14 @@ void gen_code_for_string(struct string_node * string_node) {
 
 void gen_code_for_array_lookup(struct array_lookup_node * array_lookup) {
     gen_code(array_lookup->expression);
-    MOV("BX", "OFFSET GlobalVariables");
-    ADD_NUM("BX", array_lookup->symbol->offset);
+    if (array_lookup->symbol->is_local_to_function) {
+        MOV("BX", "OFFSET Parameters");
+        ADD("BX", "Parameter_Offset");
+        SUB_NUM("BX", array_lookup->symbol->offset);
+    } else {
+        MOV("BX", "OFFSET GlobalVariables");
+        ADD_NUM("BX", array_lookup->symbol->offset);
+    }
     MOV("BX", "WORD PTR [BX]");  
     ADD("BX", "AX");
     if (array_lookup->symbol->data_type == 't') {

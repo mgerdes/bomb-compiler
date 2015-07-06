@@ -19,6 +19,7 @@ whitespace [\n\t ]*
 
 "=" { return EQUAL; } 
 "==" { return EQUAL_EQUAL; } 
+"!=" { return NOT_EQUAL; } 
 ">=" { return GREATER_THEN_EQUAL; }
 "<=" { return LESS_THEN_EQUAL; }
 ">" { return GREATER_THEN; }
